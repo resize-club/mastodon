@@ -105,6 +105,7 @@
     "resolve-url-loader": "^2.1.0",
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.6",
+    "sha1": "^1.1.1",
     "stringz": "^0.2.2",
     "style-loader": "^0.18.2",
     "substring-trie": "^1.0.1",

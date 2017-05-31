@@ -5,6 +5,7 @@ import { isRtl } from '../rtl';
 import { FormattedMessage } from 'react-intl';
 import Permalink from './permalink';
 import classnames from 'classnames';
+import { getInstanceColor, getContrastYIQ } from '../instance_color'
 
 export default class StatusContent extends React.PureComponent {
 
@@ -38,7 +39,22 @@ export default class StatusContent extends React.PureComponent {
 
       if (mention) {
         link.addEventListener('click', this.onMentionClick.bind(this, mention), false);
-        link.setAttribute('title', mention.get('acct'));
+
+        let url = link.getAttribute('href');
+        let titleText = mention.get('acct');
+
+        link.setAttribute('title',titleText);
+        let color = getInstanceColor(titleText, url);
+
+        link.setAttribute('style', `border-radius: 4px; border-left: 2px solid #${color}; border-bottom: 1px solid #${color}; padding-right: 2px;`);
+        let at = link.firstChild;
+        if (at.nodeValue === '@' || at.textContent === '@') {
+          let atColor = getContrastYIQ(color);
+          let newSpan = document.createElement('b');
+          newSpan.appendChild(document.createTextNode('@'));
+          newSpan.setAttribute('style', `color: ${atColor}; font-weight:bold; background-color: #${color}; padding-right: 2px; margin-right: 1px;`);
+          link.replaceChild(newSpan, at);
+        }
       } else if (link.textContent[0] === '#' || (link.previousSibling && link.previousSibling.textContent && link.previousSibling.textContent[link.previousSibling.textContent.length - 1] === '#')) {
         link.addEventListener('click', this.onHashtagClick.bind(this, link.text), false);
       } else {
@@ -133,7 +149,7 @@ export default class StatusContent extends React.PureComponent {
 
       const mentionLinks = status.get('mentions').map(item => (
         <Permalink to={`/accounts/${item.get('id')}`} href={item.get('url')} key={item.get('id')} className='mention'>
-          @<span>{item.get('username')}</span>
+          <span>@</span><span>{item.get('username')}</span>
         </Permalink>
       )).reduce((aggregate, item) => [...aggregate, item, ' '], []);
 
