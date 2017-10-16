@@ -21,6 +21,7 @@
 #  favourites_count       :integer          default(0), not null
 #  reblogs_count          :integer          default(0), not null
 #  language               :string
+#  full_status_text       :text             default(""), not null
 #  conversation_id        :integer
 #  local                  :boolean
 #
@@ -266,6 +267,9 @@ class Status < ApplicationRecord
 
     self.text         = emojify(text)
     self.spoiler_text = emojify(spoiler_text)
+
+    full_status_text&.strip!
+    self.full_status_text = emojify(full_status_text)
   end
 
   def set_reblog
