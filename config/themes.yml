@@ -1,2 +1,2 @@
-default: styles/comicsans.scss
-standard: styles/application.scss
+default: styles/application.scss
+comicsans: styles/comicsans.scss
